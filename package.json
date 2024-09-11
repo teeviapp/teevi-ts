@@ -1,12 +1,16 @@
 {
   "name": "teevi-ts",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Teevi source bindings in Typescript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "bin": {
+    "create-manifest": "./bin/create-manifest.js"
+  },
   "scripts": {
     "build": "tsc",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "create-manifest": "node bin/create-manifest.js"
   },
   "repository": {
     "type": "git",
