@@ -1,11 +1,12 @@
 {
   "name": "teevi-ts",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Teevi source bindings in Typescript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
