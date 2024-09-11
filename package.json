@@ -1,0 +1,23 @@
+{
+  "name": "teevi-ts",
+  "version": "0.0.1",
+  "description": "Teevi source bindings in Typescript",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/teeviapp/teevi-ts.git"
+  },
+  "author": "teeviapp",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/teeviapp/teevi-ts/issues"
+  },
+  "homepage": "https://github.com/teeviapp/teevi-ts#readme",
+  "devDependencies": {
+    "typescript": "^5.6.2"
+  }
+}
