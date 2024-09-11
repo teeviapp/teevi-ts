@@ -4,6 +4,7 @@
   "description": "Teevi source bindings in Typescript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "type": "module",
   "bin": {
     "create-manifest": "./bin/create-manifest.js"
   },
