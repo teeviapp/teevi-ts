@@ -1,2 +1,2 @@
 export * from "./source"
-export * from "./fetch"
+export * from "./network"

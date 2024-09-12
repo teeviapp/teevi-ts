@@ -1,9 +1,9 @@
-export declare function fetch(
+export declare function envFetch(
   input: string,
-  options?: RequestOptions
+  init?: RequestInit
 ): Promise<Response>
 
-export interface RequestOptions {
+export interface RequestInit {
   /** A BodyInit object or null to set request's body. */
   body?: string | null
   /** A string indicating how the request will interact with the browser's cache to set request's cache. */
