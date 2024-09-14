@@ -15,16 +15,19 @@ const getPackageJson = async (path) => {
 const libraryPackage = await getPackageJson(dirname(import.meta.dirname))
 const sourcePackage = await getPackageJson(process.cwd())
 
-if (!sourcePackage.versionCode) {
-  console.error("Error missing versionCode from package.json")
+if (!sourcePackage.displayName) {
+  console.error("Error missing displayName from package.json")
   process.exit(1)
 }
 
 // Define the content for manifest.json using information from package.json
 const manifestContent = {
-  name: sourcePackage.name,
-  versionCode: sourcePackage.versionCode,
-  libraryVersion: libraryPackage.version,
+  id: sourcePackage.name,
+  name: sourcePackage.displayName,
+  version: {
+    source: sourcePackage.version,
+    teevi: libraryPackage.version,
+  },
   description: sourcePackage.description || "Thirt-party source for Teevi",
   author: sourcePackage.author || "Unknown",
 }
