@@ -24,6 +24,20 @@ export type ShowEpisode = {
   durationInSeconds?: number
 }
 
-export type SearchShowsFuntion = (query: string) => Promise<SearchShow[]>
+export type VideoSource = {
+  url: string
+  headers?: [string: string]
+}
+
+export type SearchFuntion = (query: string) => Promise<SearchShow[]>
+
 export type FetchShowDetailsFuntion = (id: string) => Promise<Show>
-export type FetchEpisodesFuntion = (showId: string) => Promise<ShowEpisode[]>
+
+export type FetchEpisodesFuntion = (
+  showId: string,
+  season?: number
+) => Promise<ShowEpisode[]>
+
+export type FetchVideoSourcesFuntion = (
+  episodeId: string
+) => Promise<VideoSource[]>
