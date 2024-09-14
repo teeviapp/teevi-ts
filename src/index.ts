@@ -105,3 +105,12 @@ export type FetchEpisodesFunction = (
   showId: string,
   season?: number
 ) => Promise<ShowEpisode[]>
+
+/**
+ * Function to fetch video sources for an episode by its ID.
+ * @param episodeId - The unique identifier of the episode.
+ * @returns A promise that resolves to an array of VideoSource objects.
+ */
+export type FetchVideoSourcesFunction = (
+  episodeId: string
+) => Promise<VideoSource[]>
