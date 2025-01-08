@@ -1,17 +1,18 @@
 /**
- * Represents the type of show: either a movie or a series.
+ * Represents the kind of show: either a movie or a series.
+ * @type {"movie" | "series"}
  */
-export type ShowKind = "movie" | "series"
+export type TeeviShowKind = "movie" | "series"
 
 /**
  * Represents a basic search result for a show.
  */
-export type SearchShow = {
-  /** Unique identifier for the show. */
-  id: string
-
+export type TeeviSearchResult = {
   /** The type of show (movie or series). */
-  kind: ShowKind
+  kind: TeeviShowKind
+
+  /** Unique identifier for the search result. */
+  id: string
 
   /** Title of the show. */
   title: string
@@ -23,94 +24,109 @@ export type SearchShow = {
 /**
  * Represents detailed information about a show.
  */
-export type Show = SearchShow & {
+export type TeeviShow = {
+  /** The type of show (movie or series). */
+  kind: TeeviShowKind
+
+  /** Unique identifier for the show. */
+  id: string
+
+  /** Title of the show. */
+  title: string
+
+  /** Optional URL of the poster image. */
+  posterURL?: string
+
   /** Optional URL of the backdrop image. */
   backdropURL?: string
 
   /** Overview or synopsis of the show. */
   overview: string
 
+  /** Release date of the show in ISO format. */
+  releaseDate: string
+
   /** Duration of the show in seconds. */
-  durationInSeconds: number
+  duration: number
 
   /** List of genres associated with the show. */
   genres: string[]
 
-  /** Optional range of seasons. Omit if Show is a movie.*/
-  seasons?: {
-    /** First season number. */
-    first: number
-
-    /** Last season number. */
-    last: number
-  }
+  /** Optional range of seasons. Only present for series. */
+  seasonNumbers?: number[]
 }
 
 /**
- * Represents an episode of a show.
+ * Represents an individual media item, either a movie or an episode.
  */
-export type ShowEpisode = {
-  /** Unique identifier for the episode. */
-  id: string
-
-  /** Episode number. */
-  number: number
-
-  /** Optional title of the episode. */
-  title?: string
-
-  /** Optional URL of the thumbnail image. */
-  thumbnailURL?: string
-
-  /** Optional overview of the episode. */
-  overview?: string
-
-  /** Optional duration in seconds. */
-  durationInSeconds?: number
-}
+export type TeeviMediaItem =
+  | {
+      /** Indicates this is a movie type. */
+      type: "movie"
+      /** Unique identifier for the movie. */
+      id: string
+    }
+  | {
+      /** Indicates this is an episode type. */
+      type: "episode"
+      /** Unique identifier for the episode. */
+      id: string
+      /** Episode number in the season. */
+      number: number
+      /** Optional episode title. */
+      title?: string
+      /** Optional URL of the episode thumbnail. */
+      thumbnailURL?: string
+      /** Optional episode overview or synopsis. */
+      overview?: string
+      /** Optional episode duration in seconds. */
+      durationInSeconds?: number
+    }
 
 /**
- * Represents a video source with a URL and optional headers.
+ * Represents a video asset with a URL and optional headers.
  */
-export type VideoSource = {
-  /** URL of the video source. */
+export type TeeviVideoAsset = {
+  /** URL of the video asset. */
   url: string
 
-  /** Optional headers for the request. */
+  /** Optional HTTP headers for the video asset request. */
   headers?: Record<string, string>
 }
 
 /**
- * Function to search for shows based on a query.
- * @param query The search query.
- * @returns A promise that resolves to an array of SearchShow objects.
+ * Represents the interface for Teevi extension functionality.
  */
-export type SearchFunction = (query: string) => Promise<SearchShow[]>
+export type TeeviExtension = {
+  /**
+   * Searches for shows based on a query string.
+   * @param query The search string to find shows.
+   * @returns A promise that resolves to an array of search results.
+   */
+  fetchShowsByQuery: (query: string) => Promise<TeeviSearchResult[]>
 
-/**
- * Function to fetch details for a show by its ID.
- * @param id The unique identifier of the show.
- * @returns A promise that resolves to a Show object.
- */
-export type FetchShowDetailsFunction = (id: string) => Promise<Show>
+  /**
+   * Retrieves detailed information about a specific show.
+   * @param showId The unique identifier of the show.
+   * @returns A promise that resolves to a show's detailed information.
+   */
+  fetchShow: (showId: string) => Promise<TeeviShow>
 
-/**
- * Function to fetch episodes for a show and optionally a season.
- * If omitted, the `season` parameter will be ignored, and `showId` will be treated as if it's for a movie.
- * @param showId - The unique identifier of the show.
- * @param season - Optional season number.
- * @returns A promise that resolves to an array of ShowEpisode objects.
- */
-export type FetchEpisodesFunction = (
-  showId: string,
-  season?: number
-) => Promise<ShowEpisode[]>
+  /**
+   * Retrieves media items for a show, such as movies or episodes.
+   * @param showId The unique identifier of the show.
+   * @param season Optional season number to filter episodes.
+   * @returns A promise that resolves to an array of media items.
+   */
+  fetchMediaItems: (
+    showId: string,
+    season?: number
+  ) => Promise<TeeviMediaItem[]>
 
-/**
- * Function to fetch video sources for an episode by its ID.
- * @param episodeId - The unique identifier of the episode.
- * @returns A promise that resolves to an array of VideoSource objects.
- */
-export type FetchVideoSourcesFunction = (
-  episodeId: string
-) => Promise<VideoSource[]>
+  /**
+   * Retrieves video assets for a media item, such as movies or episodes.
+   * @param mediaId The unique identifier of the media item.
+   * @returns A promise that resolves to an array of video assets.
+   */
+  fetchVideoAssets: (mediaId: string) => Promise<TeeviVideoAsset[]>
+}

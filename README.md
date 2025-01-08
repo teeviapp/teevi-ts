@@ -1,10 +1,12 @@
 # teevi-ts
 
-Teevi Source Bindings in TypeScript
+This document provides instructions for setting up your development environment, writing your Teevi extension using TypeScript, and building it for distribution.
 
 ## Getting Started
 
-1. **Initialize your project:**
+1. **Initialize Your Project:**
+
+Set up a new Node.js project and configure TypeScript:
 
 ```bash
 npm init
@@ -12,47 +14,67 @@ npm install --save-dev typescript
 tsc --init
 ```
 
-2. **Install the bindings:**
+2. **Install teevi-ts:**
+
+Add the Teevi TypeScript library to your project:
 
 ```bash
 npm install https://github.com/teeviapp/teevi-ts
 ```
 
-## Write the Source Code
+This will prepare your development environment for creating a Teevi extension using TypeScript.
 
-Your source must exports four functions, each with a specific purpose:
+3. **Write Your Extension Code:**
 
-**`search(query: string): Promise<SearchShow[]>`**
+Now it's time to write your Teevi extension! Make sure your entry point exports a default object that implements the `TeeviExtension` type.
 
-Searches for shows based on a query.
+```typescript
+export default {
+  fetchShowsByQuery: async (query) => {
+    // Your code to fetch shows by query
+  },
+  fetchShow: async (id) => {
+    // Your code to fetch a specific show by ID
+  },
+} satisfies TeeviExtension
+```
 
-**`fetchDetails(id: string): Promise<Show>`**
+## Web API Limitations
 
-Fetches detailed information about a show by its ID.
+Please note that certain Web APIs such as `URL`, `URLSearchParams`, `Headers`, `Request`, etc., are not available in the environment where the extensions will be executed. Only the `fetch` function is provided through a native polyfill.
 
-**`fetchEpisodes(id: string,  season?: number): Promise<ShowEpisode[]>`**
+For other APIs, you can use the [core-js](https://github.com/zloirock/core-js) library to include the necessary polyfills:
 
-Fetches episodes for a show. Omit the season parameter if the ID refers to a movie.
+```bash
+npm install core-js
+```
 
-**`fetchVideoSources(episodeId: string): Promise<VideoSource[]>`**
+Then, import the required polyfills in your code:
 
-Fetches video sources for an episode.
+```typescript
+import "core-js/web/url"
+import "core-js/web/url-search-params"
+```
 
 ## Building for Distribution
 
-You can use any build system, but ensure the final output is a single JavaScript file targeting **ES2020** and **Safari 16** with the format set to **iife** (Immediately Invoked Function Expression). The global variable for exports should be named **"source"**.
+To distribute the extension, ensure the final output is a single JavaScript file with the following specifications:
 
-### Using esbuild
+- **Target**: ES2020 and Safari 16
+- **Format**: iife (Immediately Invoked Function Expression)
+- **Global Variable**: "teevi"
 
-Here's how to build using esbuild:
+Below is an example of how to perform a build using _esbuild_, but you can use any build system of your choice.
+
+1. **Install esbuild:**
 
 ```bash
 npm install --save-exact --save-dev esbuild
 ```
 
-#### Build Configuration
+2. **Create a build script:**
 
-Create a build script (`build.js`)
+Create a file named `build.js` with the following content:
 
 ```javascript
 import * as esbuild from "esbuild"
@@ -64,27 +86,9 @@ await esbuild.build({
   target: ["es2020", "safari16"],
   drop: ["console", "debugger"],
   treeShaking: true,
-  globalName: "source",
+  globalName: "teevi",
   format: "iife",
   platform: "browser",
   minify: true,
 })
 ```
-
-Explanation of Options
-
-- `entryPoints`: Specifies the entry file of your project (src/index.ts).
-- `bundle`: Ensures all dependencies are bundled into a single file.
-- `outfile`: The output file for the build process (dist/bundle.js).
-- `target`: Targets ES6 and Safari 16 compatibility.
-- `drop`: Removes console and debugger statements to optimize the final output.
-- `treeShaking`: Removes unused code for a more efficient build.
-- `globalName`: Sets the name of the global variable (source) for the bundled module.
-- `format`: Uses the iife format, which immediately invokes the bundle as a function.
-- `platform`: Targets the browser environment.
-- `minify`: Minifies the output for smaller file sizes.
-
-## Useful dependencies
-
-- [Cheerio](https://github.com/cheeriojs/cheerio): a fast, flexible library for parsing and manipulating HTML and XML.
-- [core-js](https://github.com/zloirock/core-js): for polyfills (Teevi provides a native `fetch` polyfill for you, but URL and other web API are not supported)

@@ -1,6 +1,6 @@
 {
   "name": "teevi-ts",
-  "version": "0.0.3",
+  "version": "0.0.1",
   "description": "Teevi source bindings in Typescript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
