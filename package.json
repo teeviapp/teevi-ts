@@ -1,25 +1,16 @@
 {
-  "name": "@teevi/root",
-  "version": "0.0.1",
-  "description": "Teevi extension bindings for Typescript",
+  "name": "@teeviapp/root",
+  "version": "1.0.0",
   "private": true,
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
     "build": "npm run build --workspaces",
-    "clean": "rm -rf packages/*/dist"
+    "clean": "rm -rf packages/*/dist",
+    "publish": "npm publish -ws --access public",
+    "pack": "npm pack -ws"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/teeviapp/teevi-ts.git"
-  },
-  "author": "teeviapp",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/teeviapp/teevi-ts/issues"
-  },
-  "homepage": "https://github.com/teeviapp/teevi-ts#readme",
   "devDependencies": {
     "tsup": "^8.3.6",
     "typescript": "^5.6.2"

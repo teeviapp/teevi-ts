@@ -1,23 +1,43 @@
-import { type Plugin } from "vite"
-import { readFile, writeFile } from "fs/promises"
+import type { Plugin } from "vite"
+import { writeFileSync, mkdirSync, readFileSync } from "fs"
 import path from "path"
+import pc from "picocolors"
 
 interface TeeviPluginConfig {
   name: string
+  entry?: string
+}
+
+interface PackageJson {
+  name: string
+  version: string
+  description?: string
+  author?: string
+}
+
+function log(message: string): void {
+  console.log(`${pc.cyan("teevi")} ${message}`)
+}
+
+function error(message: string): void {
+  console.error(`${pc.cyan("teevi")} ${pc.red(message)}`)
 }
 
 export default function teeviPlugin(config: TeeviPluginConfig): Plugin {
+  const entry = config.entry ?? "src/index.ts"
+
   return {
-    name: "@teevi/vite:generate:build",
+    name: "@teeviapp/vite:generate:build",
     apply: "build",
 
-    async config() {
+    config() {
+      log("Setting build configuration...")
       return {
         build: {
           lib: {
-            entry: "src/index.ts",
+            entry,
             name: "teevi",
-            fileName: () => `main.js`,
+            fileName: () => "main.js",
             formats: ["iife"],
           },
           minify: true,
@@ -25,21 +45,49 @@ export default function teeviPlugin(config: TeeviPluginConfig): Plugin {
       }
     },
 
-    async generateBundle(options) {
-      const pkg = JSON.parse(await readFile("./package.json", "utf-8"))
+    writeBundle(options) {
+      log("Reading package.json...")
 
+      let pkg: PackageJson
+      try {
+        const content = readFileSync("./package.json", "utf-8")
+        pkg = JSON.parse(content)
+      } catch (e) {
+        error("Failed to read package.json")
+        console.error(e)
+        return
+      }
+
+      log("Generating manifest...")
       const manifest = {
         id: pkg.name,
         name: config.name,
         version: pkg.version,
-        description: pkg.description || "Thirt-party extension for Teevi",
-        author: pkg.author || "Unknown",
+        description: pkg.description ?? "Third-party extension for Teevi",
+        author: pkg.author ?? "Unknown",
       }
 
-      await writeFile(
-        path.resolve(options.dir!, "manifest.json"),
-        JSON.stringify(manifest, null, 2)
-      )
+      if (!options.dir) {
+        error("No output directory specified")
+        return
+      }
+
+      try {
+        const outputDir = path.resolve(options.dir)
+        mkdirSync(outputDir, { recursive: true })
+        writeFileSync(
+          path.join(outputDir, "manifest.json"),
+          JSON.stringify(manifest, null, 2)
+        )
+        log(
+          `${pc.green("Manifest written to")} ${pc.gray(
+            path.basename(outputDir)
+          )}/${pc.cyan("manifest.json")}`
+        )
+      } catch (e) {
+        error("Failed to write manifest.json")
+        console.error(e)
+      }
     },
   }
 }
