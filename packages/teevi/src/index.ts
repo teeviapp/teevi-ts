@@ -124,7 +124,7 @@ export type TeeviExtension = {
   ) => Promise<TeeviMediaItem[]>
 
   /**
-   * Retrieves video assets for a media item, such as movies or episodes.
+   * Retrieves video assets for a media item.
    * @param mediaId The unique identifier of the media item.
    * @returns A promise that resolves to an array of video assets.
    */

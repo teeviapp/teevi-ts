@@ -1,0 +1,35 @@
+{
+  "name": "@teevi/vite",
+  "version": "0.0.1",
+  "description": "Vite plugin to build Teevi extensions",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup-node",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/teeviapp/teevi-ts.git"
+  },
+  "author": "teeviapp",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/teeviapp/teevi-ts/issues"
+  },
+  "homepage": "https://github.com/teeviapp/teevi-ts#readme",
+  "peerDependencies": {
+    "vite": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.1",
+    "vite": "^6.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
