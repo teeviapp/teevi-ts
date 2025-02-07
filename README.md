@@ -59,22 +59,10 @@ Use your bundler of choice to create a single, self-contained JavaScript file. R
 - **Format**: IIFE
 - **Global Variable**: `teevi`
 
+For further configuration options, refer to the plugin code for Vite.
+
 ## Web API Limitations
 
-The extensions runtime only provides a natify `fetch` polyfill.
-Web APIs like `URL`, `URLSearchParams`, `Headers` and `Request`, etc., are not available by default.
+The Teevi runtime does not fully support Web or DOM APIs, but it provides native polyfills for `fetch`, `URL`, and `URLSearchParams`.
 
-To include these use [core-js](https://github.com/zloirock/core-js):
-
-```bash
-npm install core-js
-```
-
-Then import the required polyfills:
-
-```typescript
-import "core-js/web/url"
-import "core-js/web/url-search-params"
-```
-
-With this setup in place, you’re ready to develop and bundle your Teevi extension. Ensure your final build meets the recommended output settings for seamless integration in the Teevi environment.
+If you require additional APIs that aren’t available, add the necessary polyfills or use a library that provides them (like [core-js](https://github.com/zloirock/core-js))
