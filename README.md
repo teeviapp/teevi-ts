@@ -1,46 +1,80 @@
 # teevi-ts
 
-Easily build Teevi extensions in TypeScript.
+Create Teevi extensions in TypeScript with ease.
 
 ## Getting Started
 
-Initialize a new Node.js project and install the Teevi library.
+1. **Set up a TypeScript project**  
+   Create a new Node.js project and install TypeScript:
 
 ```bash
 npm init
-npm install --save-dev typescript https://github.com/teeviapp/teevi-ts
-tsc --init
+npm install --save-dev typescript
+npx tsc --init
 ```
 
-Your entry point should export a default object that implements the `TeeviExtension` type.
+2. **Install Teevi Core**  
+   Add the core library to your project:
+
+```bash
+npm install @teeviapp/core
+```
+
+3. **Export a Teevi Extension**  
+   In your main entry file, export a default object that implements the `TeeviExtension` type:
 
 ```typescript
+import type { TeeviExtension } from "@teeviapp/core"
+
 export default {} satisfies TeeviExtension
 ```
 
-## Building for Distribution
+## Building
 
-Use a bundler (e.g., Parcel, Webpack, or Vite) to create a single JavaScript file with:
+### With Vite
+
+1. **Install Vite and the Teevi plugin:**
+
+```bash
+npm install --save-dev vite @teeviapp/vite
+```
+
+2. **Update your Vite Config**  
+   In`vite.config.ts`, import and register the plugin:
+
+```typescript
+import { UserConfig } from "vite"
+import teevi from "@teeviapp/vite"
+
+export default {
+  plugins: [teevi({ name: "Your Ext Name" })],
+} satisfies UserConfig
+```
+
+### Manually (e.g., Parcel or Webpack)
+
+Use your bundler of choice to create a single, self-contained JavaScript file. Recommended settings for the output bundle:
 
 - **Target**: ES2020, Safari 16
 - **Format**: IIFE
 - **Global Variable**: `teevi`
 
-This ensures compatibility with the Teevi environment.
-
 ## Web API Limitations
 
-Please note that certain Web APIs such as `URL`, `URLSearchParams`, `Headers`, `Request`, etc., are not available in the environment where the extensions will be executed. Only the `fetch` function is provided through a native polyfill.
+The extensions runtime only provides a natify `fetch` polyfill.
+Web APIs like `URL`, `URLSearchParams`, `Headers` and `Request`, etc., are not available by default.
 
-For other APIs, you can use the [core-js](https://github.com/zloirock/core-js) library to include the necessary polyfills:
+To include these use [core-js](https://github.com/zloirock/core-js):
 
 ```bash
 npm install core-js
 ```
 
-Then, import the required polyfills in your code:
+Then import the required polyfills:
 
 ```typescript
 import "core-js/web/url"
 import "core-js/web/url-search-params"
 ```
+
+With this setup in place, you’re ready to develop and bundle your Teevi extension. Ensure your final build meets the recommended output settings for seamless integration in the Teevi environment.
