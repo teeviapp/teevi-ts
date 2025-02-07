@@ -52,6 +52,9 @@ web_modules/
 # Optional npm cache directory
 .npm
 
+# Ignore package-lock.json
+package-lock.json
+
 # Optional eslint cache
 .eslintcache
 
@@ -137,3 +140,4 @@ dist
 
 # SvelteKit build / generate output
 .svelte-kit
+
