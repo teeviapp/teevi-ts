@@ -2,10 +2,37 @@ import type { Plugin } from "vite"
 import { writeFileSync, mkdirSync, readFileSync } from "fs"
 import path from "path"
 import pc from "picocolors"
+import crypto from "crypto"
 
+/**
+ * Configuration options for the Teevi plugin.
+ */
 interface TeeviPluginConfig {
+  /**
+   * The name of the plugin.
+   */
   name: string
+
+  /**
+   * The entry point file for the plugin.
+   * This is optional.
+   * Default is src/index.ts.
+   */
   entry?: string
+
+  /**
+   * Whether to minify the output.
+   * This is optional.
+   * Default is true.
+   */
+  minify?: boolean
+
+  /**
+   * The directory where assets are stored.
+   * This is optional.
+   * Default is "public".
+   */
+  assetsDir?: string
 }
 
 interface PackageJson {
@@ -13,6 +40,15 @@ interface PackageJson {
   version: string
   description?: string
   author?: string
+}
+
+interface Manifest {
+  id: string
+  name: string
+  version: string
+  description: string
+  author: string
+  hash: string
 }
 
 function log(message: string): void {
@@ -24,7 +60,19 @@ function error(message: string): void {
 }
 
 export default function teeviPlugin(config: TeeviPluginConfig): Plugin {
-  const entry = config.entry ?? "src/index.ts"
+  log("Reading package.json...")
+
+  let pkg: PackageJson
+  try {
+    const content = readFileSync("./package.json", "utf-8")
+    pkg = JSON.parse(content)
+  } catch (e) {
+    error("Failed to read package.json")
+    console.error(e)
+    throw e
+  }
+
+  const fileName = `main.js`
 
   return {
     name: "@teeviapp/vite:generate:build",
@@ -35,36 +83,40 @@ export default function teeviPlugin(config: TeeviPluginConfig): Plugin {
       return {
         build: {
           lib: {
-            entry,
+            entry: config.entry ?? "src/index.ts",
             name: "teevi",
-            fileName: () => "main.js",
+            fileName: () => fileName,
             formats: ["iife"],
           },
-          minify: true,
+          minify: config.minify ?? true,
+          outDir: `dist`,
         },
+        publicDir: config.assetsDir ?? "public",
       }
     },
 
-    writeBundle(options) {
-      log("Reading package.json...")
-
-      let pkg: PackageJson
-      try {
-        const content = readFileSync("./package.json", "utf-8")
-        pkg = JSON.parse(content)
-      } catch (e) {
-        error("Failed to read package.json")
-        console.error(e)
+    writeBundle(options, bundle) {
+      // Calculate hash from bundle
+      log("Calculating hash...")
+      const bundleFile = bundle[fileName]
+      let bundleFileHash: string
+      if (bundleFile && bundleFile.type === "chunk" && bundleFile.code) {
+        const hash = crypto.createHash("sha256")
+        hash.update(bundleFile.code)
+        bundleFileHash = hash.digest("hex")
+      } else {
+        error(`No ${fileName} found in bundle`)
         return
       }
 
       log("Generating manifest...")
-      const manifest = {
+      const manifest: Manifest = {
         id: pkg.name,
         name: config.name,
         version: pkg.version,
         description: pkg.description ?? "Third-party extension for Teevi",
         author: pkg.author ?? "Unknown",
+        hash: bundleFileHash,
       }
 
       if (!options.dir) {
