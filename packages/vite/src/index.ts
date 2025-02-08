@@ -14,7 +14,7 @@ interface TeeviPluginConfig {
   name: string
 
   /**
-   * The entry point file for the plugin.
+   * The entry point file of the extension.
    * This is optional.
    * Default is src/index.ts.
    */
@@ -45,7 +45,7 @@ interface PackageJson {
 interface Manifest {
   id: string
   name: string
-  version: string
+  version: number
   description: string
   author: string
   hash: string
@@ -57,6 +57,18 @@ function log(message: string): void {
 
 function error(message: string): void {
   console.error(`${pc.cyan("teevi")} ${pc.red(message)}`)
+}
+
+/**
+ * Converts a semantic version string (e.g. "1.2.3") to an integer.
+ * Example: "1.2.3" becomes 1002003 (1 * 1000000 + 2 * 1000 + 3)
+ *
+ * @param versionStr Semantic version string
+ * @returns The version as an integer
+ */
+function semverToInt(versionStr: string): number {
+  const [major, minor, patch] = versionStr.split(".").map(Number)
+  return major * 1000000 + minor * 1000 + patch
 }
 
 export default function teeviPlugin(config: TeeviPluginConfig): Plugin {
@@ -113,7 +125,7 @@ export default function teeviPlugin(config: TeeviPluginConfig): Plugin {
       const manifest: Manifest = {
         id: pkg.name,
         name: config.name,
-        version: pkg.version,
+        version: semverToInt(pkg.version),
         description: pkg.description ?? "Third-party extension for Teevi",
         author: pkg.author ?? "Unknown",
         hash: bundleFileHash,
