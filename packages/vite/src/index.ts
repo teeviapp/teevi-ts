@@ -39,7 +39,7 @@ type TeeviPluginConfig = {
   /**
    * Extension capabilities.
    */
-  capabilities: Set<TeeviExtensionCapability>
+  capabilities: TeeviExtensionCapability[]
 }
 
 type PackageJson = {
@@ -56,7 +56,7 @@ type Manifest = {
   description: string
   author: string
   hash: string
-  capabilities: Set<TeeviExtensionCapability>
+  capabilities: TeeviExtensionCapability[]
 }
 
 function log(message: string): void {
@@ -137,7 +137,7 @@ export default function teeviPlugin(config: TeeviPluginConfig): Plugin {
         description: pkg.description ?? "Third-party extension for Teevi",
         author: pkg.author ?? "Unknown",
         hash: bundleFileHash,
-        capabilities: config.capabilities,
+        capabilities: [...new Set(config.capabilities)],
       }
 
       if (!options.dir) {
