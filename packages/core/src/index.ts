@@ -94,10 +94,20 @@ export type TeeviVideoAsset = {
   headers?: Record<string, string>
 }
 
+export type TeeviFeedCollection = {
+  id: string
+  name: string
+  shows: {
+    id: string
+    title: string
+    posterURL?: string
+  }[]
+}
+
 /**
- * Represents the interface for Teevi extension functionality.
+ * Provides methods for retrieving metadata about shows.
  */
-export type TeeviExtension = {
+export type TeeviMetadataExtension = {
   /**
    * Searches for shows based on a query string.
    * @param query The search string to find shows.
@@ -111,7 +121,14 @@ export type TeeviExtension = {
    * @returns A promise that resolves to a show's detailed information.
    */
   fetchShow: (showId: string) => Promise<TeeviShow>
+}
 
+/**
+ * Extends the base metadata interface with video-specific capabilities
+ * for retrieving media items (such as movies or TV episodes)
+ * and video assets associated with those media items.
+ */
+export type TeeviVideoExtension = TeeviMetadataExtension & {
   /**
    * Retrieves media items for a show, such as movies or episodes.
    * @param showId The unique identifier of the show.
@@ -130,3 +147,22 @@ export type TeeviExtension = {
    */
   fetchVideoAssets: (mediaId: string) => Promise<TeeviVideoAsset[]>
 }
+
+/**
+ * Extends the base metadata interface with feed-specific capabilities.
+ */
+export type TeeviFeedExtension = TeeviMetadataExtension & {
+  /**
+   * Retrieves an array of feed collections.
+   * @returns A promise that resolves to an array of feed collections.
+   */
+  fetchFeedCollections: () => Promise<TeeviFeedCollection[]>
+}
+
+/**
+ * Represents the interface for Teevi extension functionality.
+ */
+export type TeeviExtension =
+  | TeeviMetadataExtension
+  | TeeviVideoExtension
+  | TeeviFeedExtension

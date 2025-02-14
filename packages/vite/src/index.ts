@@ -4,10 +4,12 @@ import path from "path"
 import pc from "picocolors"
 import crypto from "crypto"
 
+type TeeviExtensionType = "metadata" | "video" | "feed"
+
 /**
  * Configuration options for the Teevi plugin.
  */
-interface TeeviPluginConfig {
+type TeeviPluginConfig = {
   /**
    * The name of the plugin.
    */
@@ -33,22 +35,28 @@ interface TeeviPluginConfig {
    * Default is "public".
    */
   assetsDir?: string
+
+  /**
+   * The Teevi extension type.
+   */
+  type: TeeviExtensionType
 }
 
-interface PackageJson {
+type PackageJson = {
   name: string
   version: string
   description?: string
   author?: string
 }
 
-interface Manifest {
+type Manifest = {
   id: string
   name: string
   version: number
   description: string
   author: string
   hash: string
+  type: TeeviExtensionType
 }
 
 function log(message: string): void {
@@ -129,6 +137,7 @@ export default function teeviPlugin(config: TeeviPluginConfig): Plugin {
         description: pkg.description ?? "Third-party extension for Teevi",
         author: pkg.author ?? "Unknown",
         hash: bundleFileHash,
+        type: config.type,
       }
 
       if (!options.dir) {
