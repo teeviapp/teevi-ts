@@ -43,6 +43,7 @@ type TeeviPluginConfig = {
 }
 
 type PackageJson = {
+  homepage?: string
   name: string
   version: string
   description?: string
@@ -55,6 +56,7 @@ type Manifest = {
   version: number
   description: string
   author: string
+  homepage?: string
   hash: string
   capabilities: TeeviExtensionCapability[]
 }
@@ -138,6 +140,7 @@ export default function teeviPlugin(config: TeeviPluginConfig): Plugin {
         author: pkg.author ?? "Unknown",
         hash: bundleFileHash,
         capabilities: [...new Set(config.capabilities)],
+        homepage: pkg.homepage,
       }
 
       if (!options.dir) {
