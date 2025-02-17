@@ -12,4 +12,8 @@ export interface TeeviRuntime {
 /**
  * Global Teevi object.
  */
-export declare const Teevi: TeeviRuntime
+declare global {
+  var Teevi: TeeviRuntime
+}
+
+export {}
