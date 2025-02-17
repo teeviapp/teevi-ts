@@ -1,9 +1,15 @@
 /**
  * Represents the runtime interface for the injected global Teevi object.
  */
-export interface TeeviRuntime {}
+export interface TeeviRuntime {
+  /**
+   * Specifies the current language setting.
+   * The language should be provided as a BCP 47 language tag (e.g., "en", "it").
+   */
+  readonly language?: string
+}
 
 /**
- * Declares the global Teevi object.
+ * Global Teevi object.
  */
 export declare const Teevi: TeeviRuntime
