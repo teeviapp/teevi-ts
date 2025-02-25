@@ -19,6 +19,9 @@ export type TeeviShowEntry = {
 
   /** Optional URL of the poster image. */
   posterURL?: string
+
+  /** Optional release year of the movie or first/last air date of the series */
+  year?: number
 }
 
 /**
