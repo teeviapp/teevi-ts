@@ -57,6 +57,9 @@ export type TeeviShow = {
 
   /** Optional range of seasons. Only present for series. */
   seasonNumbers?: number[]
+
+  /** Optional average rating of the show. */
+  rating?: number
 }
 
 /**
