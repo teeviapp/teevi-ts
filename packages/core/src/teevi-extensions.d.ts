@@ -55,11 +55,19 @@ export type TeeviShow = {
   /** List of genres associated with the show. */
   genres: string[]
 
-  /** Optional range of seasons. Only present for series. */
-  seasonNumbers?: number[]
+  /** Optional list of seasons. Only present for series. */
+  seasons?: TeeviShowSeason[]
 
   /** Optional average rating of the show. */
   rating?: number
+}
+
+export type TeeviShowSeason = {
+  /** Season number. */
+  number: number
+
+  /** Optional season title. */
+  name?: string
 }
 
 /**
