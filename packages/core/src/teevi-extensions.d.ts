@@ -71,31 +71,22 @@ export type TeeviShowSeason = {
 }
 
 /**
- * Represents an individual media item, either a movie or an episode.
+ * Represents an episode in a series.
  */
-export type TeeviMediaItem =
-  | {
-      /** Indicates this is a movie type. */
-      type: "movie"
-      /** Unique identifier for the movie. */
-      id: string
-    }
-  | {
-      /** Indicates this is an episode type. */
-      type: "episode"
-      /** Unique identifier for the episode. */
-      id: string
-      /** Episode number in the season. */
-      number: number
-      /** Optional episode title. */
-      title?: string
-      /** Optional URL of the episode thumbnail. */
-      thumbnailURL?: string
-      /** Optional episode overview or synopsis. */
-      overview?: string
-      /** Optional episode duration in seconds. */
-      durationInSeconds?: number
-    }
+export type TeeviShowEpisode = {
+  /** Unique identifier for the episode. */
+  id: string
+  /** Episode number in the season. */
+  number: number
+  /** Optional episode title. */
+  title?: string
+  /** Optional URL of the episode thumbnail. */
+  thumbnailURL?: string
+  /** Optional episode overview or synopsis. */
+  overview?: string
+  /** Optional episode duration in seconds. */
+  duration?: number
+}
 
 /**
  * Represents a video asset with a URL and optional headers.
@@ -134,29 +125,27 @@ export type TeeviMetadataExtension = {
    * @returns A promise that resolves to a show's detailed information.
    */
   fetchShow: (showId: string) => Promise<TeeviShow>
+
+  /**
+   * Retrieves episodes for a specific show and season.
+   * @param showId The unique identifier of the show.
+   * @param season The season number to filter episodes.
+   * @returns A promise that resolves to an array of episodes.
+   */
+  fetchEpisodes: (showId: string, season: number) => Promise<TeeviShowEpisode[]>
 }
 
 /**
  * Extends the base metadata interface with video-specific capabilities
- * for retrieving media items (such as movies or TV episodes)
- * and video assets associated with those media items.
+ * for retrieving video assets associated with shows.
  */
 export type TeeviVideoExtension = TeeviMetadataExtension & {
   /**
-   * Retrieves media items for a show, such as movies or episodes.
-   * @param showId The unique identifier of the show.
-   * @param season Optional season number to filter episodes.
-   * @returns A promise that resolves to an array of media items.
-   */
-  fetchMediaItems: (
-    showId: string,
-    season?: number
-  ) => Promise<TeeviMediaItem[]>
-
-  /**
-   * Retrieves video assets for a media item.
-   * @param mediaId The unique identifier of the media item.
-   * @returns A promise that resolves to an array of video assets.
+   * Retrieves the available video assets for a given media item.
+   * @param mediaId - The unique identifier of the media item.
+   *   - If the media item is a movie, `mediaId` represents the movie's ID.
+   *   - If the media item is a TV series, `mediaId` represents the episode's ID.
+   * @returns A promise resolving to an array of video assets.
    */
   fetchVideoAssets: (mediaId: string) => Promise<TeeviVideoAsset[]>
 }
