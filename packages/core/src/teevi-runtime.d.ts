@@ -7,6 +7,11 @@ export interface TeeviRuntime {
    * The language should be provided as a BCP 47 language tag (e.g., "en", "it").
    */
   readonly language?: string
+
+  /**
+   * Provides information about the user agent of the client.
+   */
+  readonly userAgent?: string
 }
 
 /**
