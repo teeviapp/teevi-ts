@@ -5,6 +5,16 @@
 export type TeeviShowKind = "movie" | "series"
 
 /**
+ * Represents the status of a show.
+ */
+export type TeeviShowStatus =
+  | "airing" // Actively releasing episodes
+  | "ended" // Show has concluded
+  | "upcoming" // Planned but not released yet
+  | "canceled" // Officially canceled
+  | "hiatus" // Temporarily paused but may return
+
+/**
  * Represents a lightweight entry for a show, typically used in search results, recommendations, or listings.
  */
 export type TeeviShowEntry = {
@@ -60,6 +70,9 @@ export type TeeviShow = {
 
   /** Optional average rating of the show. */
   rating?: number
+
+  /** Optional status of the show. */
+  status?: TeeviShowStatus
 }
 
 export type TeeviShowSeason = {
