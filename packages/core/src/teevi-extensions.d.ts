@@ -53,6 +53,9 @@ export type TeeviShow = {
   /** Optional URL of the backdrop image. */
   backdropURL?: string
 
+  /** Optional URL of the logo image */
+  logoURL?: string
+
   /** Overview or synopsis of the show. */
   overview: string
 
@@ -172,6 +175,12 @@ export type TeeviFeedExtension = TeeviMetadataExtension & {
    * @returns A promise that resolves to an array of feed collections.
    */
   fetchFeedCollections: () => Promise<TeeviFeedCollection[]>
+
+  /**
+   * Retrieves an array of trending shows.
+   * @returns A promise that resolves to an array of trending shows.
+   */
+  fetchTrendingShows: () => Promise<TeeviShow[]>
 }
 
 /**
