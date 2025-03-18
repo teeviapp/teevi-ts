@@ -53,7 +53,7 @@ type PackageJson = {
 type Manifest = {
   id: string
   name: string
-  version: number
+  version: string
   description: string
   author: string
   homepage?: string
@@ -67,18 +67,6 @@ function log(message: string): void {
 
 function error(message: string): void {
   console.error(`${pc.cyan("teevi")} ${pc.red(message)}`)
-}
-
-/**
- * Converts a semantic version string (e.g. "1.2.3") to an integer.
- * Example: "1.2.3" becomes 1002003 (1 * 1000000 + 2 * 1000 + 3)
- *
- * @param versionStr Semantic version string
- * @returns The version as an integer
- */
-function semverToInt(versionStr: string): number {
-  const [major, minor, patch] = versionStr.split(".").map(Number)
-  return major * 1000000 + minor * 1000 + patch
 }
 
 export default function teeviPlugin(config: TeeviPluginConfig): Plugin {
@@ -135,7 +123,7 @@ export default function teeviPlugin(config: TeeviPluginConfig): Plugin {
       const manifest: Manifest = {
         id: pkg.name,
         name: config.name,
-        version: semverToInt(pkg.version),
+        version: pkg.version,
         description: pkg.description ?? "Third-party extension for Teevi",
         author: pkg.author ?? "Unknown",
         hash: bundleFileHash,
