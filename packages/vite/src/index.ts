@@ -37,6 +37,13 @@ type TeeviPluginConfig = {
   assetsDir?: string
 
   /**
+   * The icon resource name.
+   * This is optional.
+   * Default is "icon.png".
+   */
+  iconResourceName?: string
+
+  /**
    * Extension capabilities.
    */
   capabilities: TeeviExtensionCapability[]
@@ -59,6 +66,7 @@ type Manifest = {
   homepage?: string
   hash: string
   capabilities: TeeviExtensionCapability[]
+  iconResourceName: string
 }
 
 function log(message: string): void {
@@ -129,6 +137,7 @@ export default function teeviPlugin(config: TeeviPluginConfig): Plugin {
         hash: bundleFileHash,
         capabilities: [...new Set(config.capabilities)],
         homepage: pkg.homepage,
+        iconResourceName: config.iconResourceName ?? "icon.png",
       }
 
       if (!options.dir) {
