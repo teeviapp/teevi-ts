@@ -6,6 +6,12 @@ import crypto from "crypto"
 
 type TeeviExtensionCapability = "metadata" | "video" | "feed"
 
+type TeeviExtensionInput = {
+  id: string
+  name: string
+  required: boolean
+}
+
 /**
  * Configuration options for the Teevi plugin.
  */
@@ -47,6 +53,11 @@ type TeeviPluginConfig = {
    * Extension capabilities.
    */
   capabilities: TeeviExtensionCapability[]
+
+  /**
+   * Extension inputs.
+   */
+  inputs?: TeeviExtensionInput[]
 }
 
 type PackageJson = {
@@ -67,6 +78,7 @@ type Manifest = {
   hash: string
   capabilities: TeeviExtensionCapability[]
   iconResourceName: string
+  inputs: TeeviExtensionInput[]
 }
 
 function log(message: string): void {
@@ -138,6 +150,7 @@ export default function teeviPlugin(config: TeeviPluginConfig): Plugin {
         capabilities: [...new Set(config.capabilities)],
         homepage: pkg.homepage,
         iconResourceName: config.iconResourceName ?? "icon.png",
+        inputs: config.inputs ?? [],
       }
 
       if (!options.dir) {
