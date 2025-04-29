@@ -12,6 +12,14 @@ export interface TeeviRuntime {
    * Provides information about the user agent of the client.
    */
   readonly userAgent?: string
+
+  /**
+   * Retrieves the configuration value for an input defined in the manifest.
+   *
+   * @param id - The identifier of the input as defined in the manifest.
+   * @returns The input's value, or undefined if the input is not found.
+   */
+  getInputValueById(id: string): string | undefined
 }
 
 /**
