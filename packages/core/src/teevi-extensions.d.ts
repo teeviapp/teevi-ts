@@ -76,6 +76,9 @@ export type TeeviShow = {
 
   /** Optional status of the show. */
   status?: TeeviShowStatus
+
+  /** Optional list of related shows. */
+  relatedShows?: TeeviShowEntry[]
 }
 
 export type TeeviShowSeason = {
