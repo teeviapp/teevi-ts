@@ -22,6 +22,7 @@
 - [Building and Distribution](#building-and-distribution)
 - [Best Practices](#best-practices)
 - [Examples](#examples)
+  - [Official Teevi Extensions](#official-teevi-extensions)
 - [FAQ](#faq)
 
 ## Overview
@@ -456,6 +457,13 @@ Teevi supports **deep linking**, enabling users to directly install extensions f
 4. **Implement search correctly**: Ensure search is fast and returns relevant results
 
 ## Examples
+
+### Official Teevi Extensions
+
+You can explore these official extensions to see real-world implementations:
+
+- [**TMDB Extension**](https://github.com/teeviapp/teevi-tmdb): Uses The Movie Database API to provide movie and TV show metadata
+- [**Jellyfin Extension**](https://github.com/teeviapp/teevi-jellyfin): Integrates with Jellyfin media servers
 
 ### Simple Movie Search Extension
 
