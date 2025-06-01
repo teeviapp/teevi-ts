@@ -101,16 +101,24 @@ export type TeeviShowSeason = {
 export type TeeviShowEpisode = {
   /** Unique identifier for the episode. */
   id: string
+
   /** Episode number in the season. */
   number: number
+
   /** Optional episode title. */
   title?: string
+
   /** Optional URL of the episode thumbnail. */
   thumbnailURL?: string
+
   /** Optional episode overview or synopsis. */
   overview?: string
+
   /** Optional episode duration in seconds. */
   duration?: number
+
+  /** Indicates whether the episode is considered filler (non-canonical content). */
+  isFiller?: boolean
 }
 
 /**
