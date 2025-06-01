@@ -27,6 +27,9 @@ export type TeeviShowEntry = {
   /** Title of the show. */
   title: string
 
+  /** Primary language of the show in ISO 639-1 format. */
+  language?: string
+
   /** Optional URL of the poster image. */
   posterURL?: string
 
@@ -46,6 +49,9 @@ export type TeeviShow = {
 
   /** Title of the show. */
   title: string
+
+  /** Primary language of the show in ISO 639-1 format. */
+  language?: string
 
   /** Optional URL of the poster image. */
   posterURL?: string
