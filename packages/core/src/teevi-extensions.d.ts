@@ -189,11 +189,11 @@ export type TeeviLiveProgram = {
   /** Optional description of the program. */
   description?: string
 
-  /** Start time of the program (ISO date string, format: YYYY-MM-DDThh:mm:ssZ in UTC timezone). */
-  startTime: string
+  /** Start date of the program (ISO date string, format: YYYY-MM-DDThh:mm:ssZ in UTC timezone). */
+  startDate: string
 
-  /** End time of the program (ISO date string, format: YYYY-MM-DDThh:mm:ssZ in UTC timezone). */
-  endTime: string
+  /** End date of the program (ISO date string, format: YYYY-MM-DDThh:mm:ssZ in UTC timezone). */
+  endDate: string
 }
 
 /**
