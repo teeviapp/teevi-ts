@@ -1,5 +1,11 @@
 import type { Plugin } from "vite"
-import { writeFileSync, mkdirSync, readFileSync } from "fs"
+import {
+  writeFileSync,
+  mkdirSync,
+  readFileSync,
+  existsSync,
+  copyFileSync,
+} from "fs"
 import path from "path"
 import pc from "picocolors"
 import crypto from "crypto"
@@ -127,6 +133,7 @@ export default function teeviPlugin(config: TeeviPluginConfig): Plugin {
           },
           minify: config.minify ?? true,
           outDir: `dist`,
+          copyPublicDir: false,
         },
         publicDir: config.assetsDir ?? "public",
       }
@@ -169,6 +176,8 @@ export default function teeviPlugin(config: TeeviPluginConfig): Plugin {
       try {
         const outputDir = path.resolve(options.dir)
         mkdirSync(outputDir, { recursive: true })
+
+        // Write manifest.json
         writeFileSync(
           path.join(outputDir, "manifest.json"),
           JSON.stringify(manifest, null, 2)
@@ -178,6 +187,23 @@ export default function teeviPlugin(config: TeeviPluginConfig): Plugin {
             path.basename(outputDir)
           )}/${pc.cyan("manifest.json")}`
         )
+
+        // Write icon resource if it exists
+        const iconResourceName = config.iconResourceName ?? "icon.png"
+        const iconSourcePath = path.join(
+          config.assetsDir ?? "public",
+          iconResourceName
+        )
+
+        if (existsSync(iconSourcePath)) {
+          const iconDestPath = path.join(outputDir, iconResourceName)
+          copyFileSync(iconSourcePath, iconDestPath)
+          log(
+            `${pc.green("Icon resource copied to")} ${pc.gray(
+              path.basename(outputDir)
+            )}/${pc.cyan(iconResourceName)}`
+          )
+        }
       } catch (e) {
         error("Failed to write manifest.json")
         console.error(e)
