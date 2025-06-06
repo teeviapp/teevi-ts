@@ -65,7 +65,7 @@ export type TeeviShow = {
   /** Overview or synopsis of the show. */
   overview: string
 
-  /** Release date of the show in ISO format. */
+  /** Release date of the show in ISO format (yyyy-MM-dd). */
   releaseDate: string
 
   /** Duration of the show in seconds. */
@@ -142,6 +142,61 @@ export type TeeviFeedCollection = {
 }
 
 /**
+ * Represents a live TV channel or event.
+ */
+export type TeeviLiveChannel = {
+  /** Unique identifier for the channel. */
+  id: string
+
+  /** Name of the channel or event. */
+  name: string
+
+  /** Type of live content. */
+  type: "channel" | "event"
+
+  /** Optional URL of the channel logo. */
+  logoURL?: string
+
+  /** Optional category of the channel (e.g., "Sports", "News", "Entertainment"). */
+  category?: string
+
+  /** Optional description of the channel or event. */
+  description?: string
+
+  /** Optional language of the channel in ISO 639-1 format. */
+  language?: string
+
+  /**
+   * Indicates if the channel is geographically restricted.
+   * If true, the channel may only be available in certain regions.
+   */
+  geoblocked?: boolean
+}
+
+/**
+ * Represents a program on a live channel.
+ */
+export type TeeviLiveProgram = {
+  /** Unique identifier for the program. */
+  id: string
+
+  /** ID of the channel this program belongs to. */
+  channelId: string
+
+  /** Title of the program. */
+  title: string
+
+  /** Optional description of the program. */
+  description?: string
+
+  /** Start time of the program (ISO date string, format: YYYY-MM-DDThh:mm:ssZ in UTC timezone). */
+  startTime: string
+
+  /** End time of the program (ISO date string, format: YYYY-MM-DDThh:mm:ssZ in UTC timezone). */
+  endTime: string
+}
+
+/**
  * Provides methods for retrieving metadata about shows.
  */
 export type TeeviMetadataExtension = {
@@ -201,9 +256,40 @@ export type TeeviFeedExtension = TeeviMetadataExtension & {
 }
 
 /**
+ * Provides methods for accessing live TV channels and events.
+ */
+export type TeeviLiveExtension = {
+  /**
+   * Retrieves a list of available live channels and events.
+   * @returns A promise that resolves to an array of live channels.
+   */
+  fetchLiveChannels: () => Promise<TeeviLiveChannel[]>
+
+  /**
+   * Retrieves all programs within a time range.
+   * @param startDate Optional start date to filter programs (ISO date string).
+   * @param endDate Optional end date to filter programs (ISO date string).
+   * @returns A promise that resolves to an array of programs for the channel.
+   */
+  fetchChannelPrograms: (
+    startDate?: string,
+    endDate?: string
+  ) => Promise<TeeviLiveProgram[]>
+
+  /**
+   * Retrieves video asset for a live channel or event.
+   * @param channelId The unique identifier of the channel.
+   * @returns A promise that resolves to a video asset for the live channel.
+   *   Returns null if the channel is not currently live or has no video asset.
+   */
+  fetchLiveVideoAsset: (channelId: string) => Promise<TeeviVideoAsset | null>
+}
+
+/**
  * Represents the interface for Teevi extension functionality.
  */
 export type TeeviExtension =
   | TeeviMetadataExtension
   | TeeviVideoExtension
   | TeeviFeedExtension
+  | TeeviLiveExtension
