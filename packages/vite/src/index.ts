@@ -4,7 +4,7 @@ import path from "path"
 import pc from "picocolors"
 import crypto from "crypto"
 
-type TeeviExtensionCapability = "metadata" | "video" | "feed"
+type TeeviExtensionCapability = "metadata" | "video" | "feed" | "live"
 
 type TeeviExtensionInput = {
   id: string
@@ -58,6 +58,12 @@ type TeeviPluginConfig = {
    * Extension inputs.
    */
   inputs?: TeeviExtensionInput[]
+
+  /**
+   * Optional note for the extension.
+   * This can be used to provide additional information about the extension.
+   */
+  note?: string
 }
 
 type PackageJson = {
@@ -79,6 +85,7 @@ type Manifest = {
   capabilities: TeeviExtensionCapability[]
   iconResourceName: string
   inputs: TeeviExtensionInput[]
+  note?: string
 }
 
 function log(message: string): void {
@@ -151,6 +158,7 @@ export default function teeviPlugin(config: TeeviPluginConfig): Plugin {
         homepage: pkg.homepage,
         iconResourceName: config.iconResourceName ?? "icon.png",
         inputs: config.inputs ?? [],
+        note: config.note,
       }
 
       if (!options.dir) {
