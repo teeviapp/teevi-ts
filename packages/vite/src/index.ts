@@ -10,6 +10,7 @@ import path from "path"
 import pc from "picocolors"
 import crypto from "crypto"
 import type { OutputAsset, OutputChunk } from "rollup"
+import { fileURLToPath } from "url"
 
 type TeeviExtensionCapability = "metadata" | "video" | "feed" | "live"
 
@@ -220,7 +221,10 @@ function createManifest(options: {
   const { config, bundleFileHash } = options
   const extensionPackage = readPackageJson("./package.json")
   const sdkVersion = readPackageJson(
-    path.resolve(path.dirname(__filename), "../package.json")
+    path.resolve(
+      path.dirname(fileURLToPath(import.meta.url)),
+      "../package.json"
+    )
   ).version
 
   return {
