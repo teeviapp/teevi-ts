@@ -9,6 +9,7 @@ import {
 import path from "path"
 import pc from "picocolors"
 import crypto from "crypto"
+import type { OutputAsset, OutputChunk } from "rollup"
 
 type TeeviExtensionCapability = "metadata" | "video" | "feed" | "live"
 
@@ -105,16 +106,6 @@ function error(message: string): void {
 export default function teeviPlugin(config: TeeviPluginConfig): Plugin {
   log("Reading package.json...")
 
-  let pkg: PackageJson
-  try {
-    const content = readFileSync("./package.json", "utf-8")
-    pkg = JSON.parse(content)
-  } catch (e) {
-    error("Failed to read package.json")
-    console.error(e)
-    throw e
-  }
-
   const fileName = `main.js`
 
   return {
@@ -142,31 +133,17 @@ export default function teeviPlugin(config: TeeviPluginConfig): Plugin {
     writeBundle(options, bundle) {
       // Calculate hash from bundle
       log("Calculating hash...")
-      const bundleFile = bundle[fileName]
-      let bundleFileHash: string
-      if (bundleFile && bundleFile.type === "chunk" && bundleFile.code) {
-        const hash = crypto.createHash("sha256")
-        hash.update(bundleFile.code)
-        bundleFileHash = hash.digest("hex")
-      } else {
+      const bundleFileHash = calculateBundleHash(bundle[fileName])
+      if (!bundleFileHash) {
         error(`No ${fileName} found in bundle`)
         return
       }
 
       log("Generating manifest...")
-      const manifest: Manifest = {
-        id: pkg.name,
-        name: config.name,
-        version: pkg.version,
-        description: pkg.description ?? "Third-party extension for Teevi",
-        author: pkg.author ?? "Unknown",
-        hash: bundleFileHash,
-        capabilities: [...new Set(config.capabilities)],
-        homepage: pkg.homepage,
-        iconResourceName: config.iconResourceName ?? "icon.png",
-        inputs: config.inputs ?? [],
-        note: config.note,
-      }
+      const manifest = createManifest({
+        config: config,
+        bundleFileHash: bundleFileHash,
+      })
 
       if (!options.dir) {
         error("No output directory specified")
@@ -210,4 +187,49 @@ export default function teeviPlugin(config: TeeviPluginConfig): Plugin {
       }
     },
   }
+}
+
+function readPackageJson(path: string): PackageJson {
+  try {
+    const content = readFileSync(path, "utf-8")
+    return JSON.parse(content)
+  } catch (e) {
+    error("Failed to read package.json")
+    console.error(e)
+    throw e
+  }
+}
+
+function calculateBundleHash(
+  bundle: OutputAsset | OutputChunk
+): string | undefined {
+  if (bundle && bundle.type === "chunk" && bundle.code) {
+    const hash = crypto.createHash("sha256")
+    hash.update(bundle.code)
+    return hash.digest("hex")
+  } else {
+    return undefined
+  }
+}
+
+function createManifest(options: {
+  config: TeeviPluginConfig
+  bundleFileHash: string
+}): Manifest {
+  const { config, bundleFileHash } = options
+  const extensionPackage = readPackageJson("./package.json")
+  return {
+    id: extensionPackage.name,
+    name: config.name,
+    version: extensionPackage.version,
+    description:
+      extensionPackage.description ?? "Third-party extension for Teevi",
+    author: extensionPackage.author ?? "Unknown",
+    hash: bundleFileHash,
+    capabilities: [...new Set(config.capabilities)],
+    homepage: extensionPackage.homepage,
+    iconResourceName: config.iconResourceName ?? "icon.png",
+    inputs: config.inputs ?? [],
+    note: config.note,
+  } satisfies Manifest
 }
