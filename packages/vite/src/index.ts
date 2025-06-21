@@ -93,6 +93,7 @@ type Manifest = {
   iconResourceName: string
   inputs: TeeviExtensionInput[]
   note?: string
+  sdkVersion?: string
 }
 
 function log(message: string): void {
@@ -218,6 +219,10 @@ function createManifest(options: {
 }): Manifest {
   const { config, bundleFileHash } = options
   const extensionPackage = readPackageJson("./package.json")
+  const sdkVersion = readPackageJson(
+    path.resolve(path.dirname(__filename), "../package.json")
+  ).version
+
   return {
     id: extensionPackage.name,
     name: config.name,
@@ -231,5 +236,6 @@ function createManifest(options: {
     iconResourceName: config.iconResourceName ?? "icon.png",
     inputs: config.inputs ?? [],
     note: config.note,
+    sdkVersion: sdkVersion,
   } satisfies Manifest
 }
