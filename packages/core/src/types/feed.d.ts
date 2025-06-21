@@ -11,7 +11,7 @@ export type TeeviFeedCollection = {
   name: string
 
   /** An optional category for the collection, which can be either "popular" or "new". */
-  category?: "popular" | "new"
+  category?: "new" | "popular" | "best"
 
   /** An optional URL pointing to an image representing the collection. */
   imageURL?: string
