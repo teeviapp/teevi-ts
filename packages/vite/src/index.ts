@@ -18,6 +18,7 @@ type TeeviExtensionInput = {
   id: string
   name: string
   required: boolean
+  group?: "auth" | string
 }
 
 /**
