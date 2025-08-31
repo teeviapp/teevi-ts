@@ -56,6 +56,9 @@ export type TeeviShow = {
   /** Optional URL of the poster image. */
   posterURL?: string
 
+  /** Optional URL of the poster image without logo or text overlays. */
+  cleanPosterURL?: string
+
   /** Optional URL of the backdrop image. */
   backdropURL?: string
 
