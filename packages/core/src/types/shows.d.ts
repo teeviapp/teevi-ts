@@ -88,6 +88,9 @@ export type TeeviShow = {
 
   /** Optional list of related shows. */
   relatedShows?: TeeviShowEntry[]
+
+  /** Optional list of franchise shows. */
+  franchiseShows?: TeeviShowEntry[]
 }
 
 export type TeeviShowSeason = {
