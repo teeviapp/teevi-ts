@@ -14,7 +14,8 @@
   "scripts": {
     "prebuild": "tsx scripts/generate-stubs.ts",
     "build": "tsup",
-    "dev": "tsup --watch"
+    "dev": "tsup --watch",
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
