@@ -1,10 +1,11 @@
 {
   "name": "@teeviapp/create-extension",
-  "version": "0.1.0",
+  "version": "0.10.0",
   "description": "Scaffold a new Teevi extension",
   "type": "module",
   "bin": {
-    "create-teevi-extension": "dist/index.js"
+    "create-teevi-extension": "dist/index.js",
+    "create-extension": "dist/index.js"
   },
   "files": [
     "dist",
@@ -14,6 +15,19 @@
     "prebuild": "tsx scripts/generate-stubs.ts",
     "build": "tsup",
     "dev": "tsup --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/teeviapp/teevi-ts.git"
+  },
+  "author": "teeviapp",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/teeviapp/teevi-ts/issues"
+  },
+  "homepage": "https://github.com/teeviapp/teevi-ts#readme",
+  "publishConfig": {
+    "access": "public"
   },
   "devDependencies": {
     "@types/minimist": "^1.2.5",
