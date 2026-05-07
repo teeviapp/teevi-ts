@@ -1,6 +1,6 @@
 {
   "name": "@teeviapp/core",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "Teevi extension bindings for Typescript",
   "main": "dist/index.js",
   "module": "dist/index.js",
