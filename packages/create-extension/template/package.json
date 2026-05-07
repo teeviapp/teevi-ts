@@ -1,0 +1,20 @@
+{
+  "name": "<%= name %>",
+  "version": "1.0.0",
+  "description": "<%= description %>",
+  "author": "<%= author %>",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@teeviapp/core": "<%= coreVersion %>"
+  },
+  "devDependencies": {
+    "@teeviapp/vite": "<%= viteVersion %>",
+    "typescript": "^5.6.2",
+    "vite": "^6.0.0"
+  }
+}

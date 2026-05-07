@@ -1,0 +1,134 @@
+{
+  "versions": {
+    "core": "0.10.0",
+    "vite": "0.10.0"
+  },
+  "stubs": {
+    "TeeviMetadataExtension": [
+      {
+        "name": "fetchShowsByQuery",
+        "args": [
+          "query"
+        ],
+        "returnType": "Promise<import(\"/Users/manueldidonna/Developer/teevi-ts/packages/core/src/types/shows\").TeeviShowEntry[]>",
+        "defaultValue": "throw new Error(\"Not implemented\")"
+      },
+      {
+        "name": "fetchShow",
+        "args": [
+          "showId"
+        ],
+        "returnType": "Promise<import(\"/Users/manueldidonna/Developer/teevi-ts/packages/core/src/types/shows\").TeeviShow>",
+        "defaultValue": "throw new Error(\"Not implemented\")"
+      },
+      {
+        "name": "fetchEpisodes",
+        "args": [
+          "showId",
+          "season"
+        ],
+        "returnType": "Promise<import(\"/Users/manueldidonna/Developer/teevi-ts/packages/core/src/types/shows\").TeeviShowEpisode[]>",
+        "defaultValue": "throw new Error(\"Not implemented\")"
+      }
+    ],
+    "TeeviVideoExtension": [
+      {
+        "name": "fetchShowsByQuery",
+        "args": [
+          "query"
+        ],
+        "returnType": "Promise<import(\"/Users/manueldidonna/Developer/teevi-ts/packages/core/src/types/shows\").TeeviShowEntry[]>",
+        "defaultValue": "throw new Error(\"Not implemented\")"
+      },
+      {
+        "name": "fetchShow",
+        "args": [
+          "showId"
+        ],
+        "returnType": "Promise<import(\"/Users/manueldidonna/Developer/teevi-ts/packages/core/src/types/shows\").TeeviShow>",
+        "defaultValue": "throw new Error(\"Not implemented\")"
+      },
+      {
+        "name": "fetchEpisodes",
+        "args": [
+          "showId",
+          "season"
+        ],
+        "returnType": "Promise<import(\"/Users/manueldidonna/Developer/teevi-ts/packages/core/src/types/shows\").TeeviShowEpisode[]>",
+        "defaultValue": "throw new Error(\"Not implemented\")"
+      },
+      {
+        "name": "fetchVideoAssets",
+        "args": [
+          "mediaId"
+        ],
+        "returnType": "Promise<import(\"/Users/manueldidonna/Developer/teevi-ts/packages/core/src/types/video-asset\").TeeviVideoAsset[]>",
+        "defaultValue": "throw new Error(\"Not implemented\")"
+      }
+    ],
+    "TeeviFeedExtension": [
+      {
+        "name": "fetchShowsByQuery",
+        "args": [
+          "query"
+        ],
+        "returnType": "Promise<import(\"/Users/manueldidonna/Developer/teevi-ts/packages/core/src/types/shows\").TeeviShowEntry[]>",
+        "defaultValue": "throw new Error(\"Not implemented\")"
+      },
+      {
+        "name": "fetchShow",
+        "args": [
+          "showId"
+        ],
+        "returnType": "Promise<import(\"/Users/manueldidonna/Developer/teevi-ts/packages/core/src/types/shows\").TeeviShow>",
+        "defaultValue": "throw new Error(\"Not implemented\")"
+      },
+      {
+        "name": "fetchEpisodes",
+        "args": [
+          "showId",
+          "season"
+        ],
+        "returnType": "Promise<import(\"/Users/manueldidonna/Developer/teevi-ts/packages/core/src/types/shows\").TeeviShowEpisode[]>",
+        "defaultValue": "throw new Error(\"Not implemented\")"
+      },
+      {
+        "name": "fetchFeedCollections",
+        "args": [],
+        "returnType": "Promise<import(\"/Users/manueldidonna/Developer/teevi-ts/packages/core/src/types/feed\").TeeviFeedCollection[]>",
+        "defaultValue": "throw new Error(\"Not implemented\")"
+      },
+      {
+        "name": "fetchTrendingShows",
+        "args": [],
+        "returnType": "Promise<import(\"/Users/manueldidonna/Developer/teevi-ts/packages/core/src/types/shows\").TeeviShow[]>",
+        "defaultValue": "throw new Error(\"Not implemented\")"
+      }
+    ],
+    "TeeviLiveExtension": [
+      {
+        "name": "fetchLiveChannels",
+        "args": [],
+        "returnType": "Promise<import(\"/Users/manueldidonna/Developer/teevi-ts/packages/core/src/types/live\").TeeviLiveChannel[]>",
+        "defaultValue": "throw new Error(\"Not implemented\")"
+      },
+      {
+        "name": "fetchChannelPrograms",
+        "args": [
+          "startDate",
+          "endDate"
+        ],
+        "returnType": "Promise<import(\"/Users/manueldidonna/Developer/teevi-ts/packages/core/src/types/live\").TeeviLiveProgram[]>",
+        "defaultValue": "throw new Error(\"Not implemented\")"
+      },
+      {
+        "name": "fetchLiveVideoAsset",
+        "args": [
+          "channelId"
+        ],
+        "returnType": "Promise<import(\"/Users/manueldidonna/Developer/teevi-ts/packages/core/src/types/video-asset\").TeeviVideoAsset | null>",
+        "defaultValue": "throw new Error(\"Not implemented\")"
+      }
+    ]
+  }
+}
