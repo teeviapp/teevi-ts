@@ -4,7 +4,7 @@ import typescriptPlugin from "@typescript-eslint/eslint-plugin"
 export default [
   {
     // Ignore build artifacts, node_modules, and scaffold templates
-    ignores: ["**/dist/**", "**/node_modules/**", "**/template/**"]
+    ignores: ["**/dist/**", "**/node_modules/**", "**/template/**"],
   },
   {
     files: ["**/*.ts", "**/*.tsx"],
@@ -12,16 +12,19 @@ export default [
       parser: typescriptParser,
       parserOptions: {
         ecmaVersion: "latest",
-        sourceType: "module"
-      }
+        sourceType: "module",
+      },
     },
     plugins: {
-      "@typescript-eslint": typescriptPlugin
+      "@typescript-eslint": typescriptPlugin,
     },
     rules: {
-      "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { argsIgnorePattern: "^_" },
+      ],
       "no-console": "off",
-      "semi": ["error", "never"]
-    }
-  }
+      semi: ["error", "never"],
+    },
+  },
 ]

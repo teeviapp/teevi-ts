@@ -1,0 +1,15 @@
+# Ignore build directories
+dist/
+**/dist/
+
+# Ignore CLI scaffolding templates (contain template placeholders)
+packages/create-extension/template/
+**/template/
+
+# Ignore dependency directories
+node_modules/
+**/node_modules/
+
+# Ignore local config files
+.turbo/
+.husky/

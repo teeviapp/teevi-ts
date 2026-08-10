@@ -36,7 +36,7 @@ Teevi extensions are modular. You can implement one or more of the following int
 | **Video**    | `TeeviVideoExtension`    | Provide streaming URLs (MP4, HLS, DASH).         |
 | **Feed**     | `TeeviFeedExtension`     | Create "Home" collections or "Trending" lists.   |
 | **Live TV**  | `TeeviLiveExtension`     | Integrate live channels and EPG data.            |
-| **Auth**     | `TeeviAuthExtension`     | Handle user authentication and user sessions.   |
+| **Auth**     | `TeeviAuthExtension`     | Handle user authentication and user sessions.    |
 
 ### Example implementation
 
@@ -105,7 +105,7 @@ For extensions that require user login, you can implement the `TeeviAuthExtensio
        const response = await fetch("https://api.example.com/login", {
          method: "POST",
          headers: { "Content-Type": "application/json" },
-         body: JSON.stringify({ username, password })
+         body: JSON.stringify({ username, password }),
        })
 
        if (!response.ok) throw new Error("Invalid credentials")
@@ -115,9 +115,9 @@ For extensions that require user login, you can implement the `TeeviAuthExtensio
        return {
          token: data.accessToken,
          refreshToken: data.refreshToken,
-         user: { username }
+         user: { username },
        } satisfies TeeviSession
-     }
+     },
    } satisfies TeeviAuthExtension
    ```
 

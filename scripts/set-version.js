@@ -7,7 +7,9 @@ const rootDir = path.resolve(__dirname, "..")
 const newVersion = process.argv[2]
 
 if (!newVersion) {
-  console.error("Error: Please provide a version number. Example: node scripts/set-version.js 0.12.0")
+  console.error(
+    "Error: Please provide a version number. Example: node scripts/set-version.js 0.12.0"
+  )
   process.exit(1)
 }
 
@@ -15,14 +17,14 @@ const packages = [
   "package.json",
   "packages/core/package.json",
   "packages/vite/package.json",
-  "packages/create-extension/package.json"
+  "packages/create-extension/package.json",
 ]
 
 for (const pkgPath of packages) {
   const absolutePath = path.resolve(rootDir, pkgPath)
   const content = JSON.parse(fs.readFileSync(absolutePath, "utf-8"))
   content.version = newVersion
-  
+
   // Update internal references if any package depends on another workspace package
   if (content.dependencies && content.dependencies["@teeviapp/core"]) {
     content.dependencies["@teeviapp/core"] = newVersion
