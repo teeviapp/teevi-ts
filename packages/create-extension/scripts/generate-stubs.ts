@@ -101,7 +101,7 @@ const output = {
   stubs,
 }
 
-fs.writeFileSync(outputFilePath, JSON.stringify(output, null, 2))
+fs.writeFileSync(outputFilePath, JSON.stringify(output, null, 2) + "\n")
 console.log(
   `Generated stubs and versions (${corePkg.version}) in ${outputFilePath}`
 )

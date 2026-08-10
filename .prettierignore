@@ -5,6 +5,7 @@ dist/
 # Ignore CLI scaffolding templates (contain template placeholders)
 packages/create-extension/template/
 **/template/
+packages/create-extension/src/stubs.json
 
 # Ignore dependency directories
 node_modules/
