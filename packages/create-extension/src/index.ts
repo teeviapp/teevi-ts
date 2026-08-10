@@ -4,7 +4,7 @@ import path from "node:path"
 import { fileURLToPath } from "node:url"
 import minimist from "minimist"
 import prompts from "prompts"
-import { blue, cyan, green, red, reset } from "kolorist"
+import { green, red, reset } from "kolorist"
 // @ts-ignore
 import data from "./stubs.json" assert { type: "json" }
 
