@@ -9,8 +9,12 @@ const coreSrcDir = path.resolve(rootDir, "packages/core/src")
 const outputFilePath = path.resolve(__dirname, "../src/stubs.json")
 
 // Get current versions from workspace
-const corePkg = JSON.parse(fs.readFileSync(path.resolve(rootDir, "packages/core/package.json"), "utf-8"))
-const vitePkg = JSON.parse(fs.readFileSync(path.resolve(rootDir, "packages/vite/package.json"), "utf-8"))
+const corePkg = JSON.parse(
+  fs.readFileSync(path.resolve(rootDir, "packages/core/package.json"), "utf-8")
+)
+const vitePkg = JSON.parse(
+  fs.readFileSync(path.resolve(rootDir, "packages/vite/package.json"), "utf-8")
+)
 
 const project = new Project()
 
@@ -22,6 +26,7 @@ const extensionInterfaces = [
   "TeeviVideoExtension",
   "TeeviFeedExtension",
   "TeeviLiveExtension",
+  "TeeviAuthExtension",
 ]
 
 type MethodStub = {
@@ -39,8 +44,20 @@ for (const typeName of extensionInterfaces) {
   })
   const typeAlias = sourceFile.getTypeAliasOrThrow(typeName)
   const type = typeAlias.getType()
-  
+
   stubs[typeName] = extractMethodsFromType(type)
+}
+
+function cleanReturnType(typeText: string): string {
+  return typeText.replace(/import\("([^"]+)"\)/g, (match, importPath) => {
+    if (
+      importPath.includes("packages/core/src") ||
+      importPath.includes("core/src")
+    ) {
+      return `import("@teeviapp/core")`
+    }
+    return match
+  })
 }
 
 function extractMethodsFromType(type: Type): MethodStub[] {
@@ -55,8 +72,9 @@ function extractMethodsFromType(type: Type): MethodStub[] {
     if (propType.getCallSignatures().length > 0) {
       const signature = propType.getCallSignatures()[0]
       const name = prop.getName()
-      const args = signature.getParameters().map(p => p.getName())
-      const returnType = signature.getReturnType().getText()
+      const args = signature.getParameters().map((p) => p.getName())
+      const rawReturnType = signature.getReturnType().getText()
+      const returnType = cleanReturnType(rawReturnType)
       let defaultValue = 'throw new Error("Not implemented")'
 
       if (returnType.includes("void") && !returnType.includes("Promise")) {
@@ -67,9 +85,8 @@ function extractMethodsFromType(type: Type): MethodStub[] {
         name,
         args,
         returnType,
-        defaultValue
+        defaultValue,
       })
-
     }
   }
 
@@ -81,8 +98,10 @@ const output = {
     core: corePkg.version,
     vite: vitePkg.version,
   },
-  stubs
+  stubs,
 }
 
 fs.writeFileSync(outputFilePath, JSON.stringify(output, null, 2))
-console.log(`Generated stubs and versions (${corePkg.version}) in ${outputFilePath}`)
+console.log(
+  `Generated stubs and versions (${corePkg.version}) in ${outputFilePath}`
+)

@@ -35,7 +35,12 @@ async function init() {
   let targetDir = argTargetDir || DEFAULT_TARGET_DIR
 
   let result: prompts.Answers<
-    "projectName" | "displayName" | "description" | "author" | "capabilities" | "overwrite"
+    | "projectName"
+    | "displayName"
+    | "description"
+    | "author"
+    | "capabilities"
+    | "overwrite"
   >
 
   try {
@@ -46,9 +51,11 @@ async function init() {
           name: "projectName",
           message: reset("Project name:"),
           initial: DEFAULT_TARGET_DIR,
-          validate: (name: string) => 
-            /^(?:@[a-z0-9-*~][a-z0-9-*._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/.test(name) 
-              ? true 
+          validate: (name: string) =>
+            /^(?:@[a-z0-9-*~][a-z0-9-*._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/.test(
+              name
+            )
+              ? true
               : "Invalid package.json name",
           onState: (state: any) => {
             targetDir = state.value.trim() || DEFAULT_TARGET_DIR
@@ -99,6 +106,7 @@ async function init() {
             { title: "Video", value: "video", selected: true },
             { title: "Feed", value: "feed" },
             { title: "Live", value: "live" },
+            { title: "Authentication", value: "auth" },
           ],
           instructions: false,
           min: 1,
@@ -115,7 +123,14 @@ async function init() {
     return
   }
 
-  const { projectName, displayName, description, author, capabilities, overwrite } = result
+  const {
+    projectName,
+    displayName,
+    description,
+    author,
+    capabilities,
+    overwrite,
+  } = result
   const root = path.join(cwd, targetDir)
 
   if (overwrite) {
@@ -141,7 +156,13 @@ async function init() {
   }
 
   const files = fs.readdirSync(templateDir)
-  for (const file of files.filter((f) => f !== "package.json" && f !== "vite.config.ts" && f !== "src" && f !== "README.md")) {
+  for (const file of files.filter(
+    (f) =>
+      f !== "package.json" &&
+      f !== "vite.config.ts" &&
+      f !== "src" &&
+      f !== "README.md"
+  )) {
     write(file)
   }
 
@@ -149,24 +170,46 @@ async function init() {
   const srcDir = path.join(templateDir, "src")
   const targetSrcDir = path.join(root, "src")
   if (!fs.existsSync(targetSrcDir)) fs.mkdirSync(targetSrcDir)
-  
+
   const srcFiles = fs.readdirSync(srcDir)
-  for (const file of srcFiles.filter(f => f !== "index.ts")) {
+  for (const file of srcFiles.filter((f) => f !== "index.ts")) {
     copy(path.join(srcDir, file), path.join(targetSrcDir, file))
   }
 
   // Templates with replacements
-  let pkgContent = fs.readFileSync(path.join(templateDir, "package.json"), "utf-8")
-  pkgContent = pkgContent.replace("<%= name %>", projectName || path.basename(targetDir))
+  let pkgContent = fs.readFileSync(
+    path.join(templateDir, "package.json"),
+    "utf-8"
+  )
+  pkgContent = pkgContent.replace(
+    "<%= name %>",
+    projectName || path.basename(targetDir)
+  )
   pkgContent = pkgContent.replace("<%= description %>", description)
   pkgContent = pkgContent.replace("<%= author %>", author)
-  pkgContent = pkgContent.replace("<%= coreVersion %>", `^${typedData.versions.core}`)
-  pkgContent = pkgContent.replace("<%= viteVersion %>", `^${typedData.versions.vite}`)
+  pkgContent = pkgContent.replace(
+    "<%= coreVersion %>",
+    `^${typedData.versions.core}`
+  )
+  pkgContent = pkgContent.replace(
+    "<%= viteVersion %>",
+    `^${typedData.versions.vite}`
+  )
   write("package.json", pkgContent)
 
-  let viteConfig = fs.readFileSync(path.join(templateDir, "vite.config.ts"), "utf-8")
+  let viteConfig = fs.readFileSync(
+    path.join(templateDir, "vite.config.ts"),
+    "utf-8"
+  )
   viteConfig = viteConfig.replace("<%= displayName %>", displayName)
-  viteConfig = viteConfig.replace("<%= capabilities %>", capabilities.map((c: string) => `"${c}"`).join(", "))
+  viteConfig = viteConfig.replace(
+    "<%= capabilities %>",
+    capabilities.map((c: string) => `"${c}"`).join(", ")
+  )
+  const credentialsString = capabilities.includes("auth")
+    ? `\n      credentials: [\n        { id: "username", name: "Username", required: true },\n        { id: "password", name: "Password", required: true, secret: true },\n      ],`
+    : ""
+  viteConfig = viteConfig.replace("<%= credentials %>", credentialsString)
   write("vite.config.ts", viteConfig)
 
   let readme = fs.readFileSync(path.join(templateDir, "README.md"), "utf-8")
@@ -176,14 +219,16 @@ async function init() {
 
   // Determine extension types based on capabilities
   const selectedTypes: string[] = []
-  if (capabilities.includes("metadata")) selectedTypes.push("TeeviMetadataExtension")
+  if (capabilities.includes("metadata"))
+    selectedTypes.push("TeeviMetadataExtension")
   if (capabilities.includes("video")) selectedTypes.push("TeeviVideoExtension")
   if (capabilities.includes("feed")) selectedTypes.push("TeeviFeedExtension")
   if (capabilities.includes("live")) selectedTypes.push("TeeviLiveExtension")
+  if (capabilities.includes("auth")) selectedTypes.push("TeeviAuthExtension")
 
   // Fallback and cleaning
   if (selectedTypes.length === 0) selectedTypes.push("TeeviMetadataExtension")
-  
+
   const extensionType = selectedTypes.join(" & ")
   const extensionImports = selectedTypes.join(", ")
 
@@ -202,7 +247,11 @@ async function init() {
 
   const methods = allMethods.map((m) => {
     const isThrow = m.defaultValue?.includes("throw")
-    const body = m.defaultValue ? (isThrow ? m.defaultValue : `return ${m.defaultValue}`) : ""
+    const body = m.defaultValue
+      ? isThrow
+        ? m.defaultValue
+        : `return ${m.defaultValue}`
+      : ""
     return `${m.name}: async (${m.args.join(", ")}) => {\n    ${body}\n  },`
   })
 

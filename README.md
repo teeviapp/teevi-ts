@@ -36,6 +36,7 @@ Teevi extensions are modular. You can implement one or more of the following int
 | **Video**    | `TeeviVideoExtension`    | Provide streaming URLs (MP4, HLS, DASH).         |
 | **Feed**     | `TeeviFeedExtension`     | Create "Home" collections or "Trending" lists.   |
 | **Live TV**  | `TeeviLiveExtension`     | Integrate live channels and EPG data.            |
+| **Auth**     | `TeeviAuthExtension`     | Handle user authentication and user sessions.   |
 
 ### Example implementation
 
@@ -71,6 +72,64 @@ Inputs allow you to request configuration from users (e.g., API Keys, Server URL
 2. **Access** them in your code:
    ```typescript
    const token = Teevi.getInputValueById("token")
+   ```
+
+---
+
+## 🔒 Authentication & Sessions
+
+For extensions that require user login, you can implement the `TeeviAuthExtension` capability. This enables secure, platform-orchestrated user sessions.
+
+1. **Define** authentication credentials in your `vite.config.ts`:
+
+   ```typescript
+   teevi({
+     capabilities: ["auth"],
+     credentials: [
+       { id: "username", name: "Username", required: true },
+       { id: "password", name: "Password", required: true, secret: true },
+     ],
+   })
+   ```
+
+2. **Implement** the `TeeviAuthExtension` interface:
+
+   ```typescript
+   import type { TeeviAuthExtension, TeeviSession } from "@teeviapp/core"
+
+   export default {
+     login: async (credentials) => {
+       const { username, password } = credentials
+
+       // Perform network authentication request
+       const response = await fetch("https://api.example.com/login", {
+         method: "POST",
+         headers: { "Content-Type": "application/json" },
+         body: JSON.stringify({ username, password })
+       })
+
+       if (!response.ok) throw new Error("Invalid credentials")
+       const data = await response.json()
+
+       // Return a TeeviSession object (delegates storage to the host)
+       return {
+         token: data.accessToken,
+         refreshToken: data.refreshToken,
+         user: { username }
+       } satisfies TeeviSession
+     }
+   } satisfies TeeviAuthExtension
+   ```
+
+3. **Manage** session tokens in your content requests:
+
+   ```typescript
+   // Retrieve the active session token saved by the host platform
+   const session = await Teevi.getSession()
+   if (session) {
+     const token = session.token
+     // Use the token in authorization headers...
+   }
    ```
 
 ---

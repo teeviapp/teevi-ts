@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [
     teevi({
       name: "<%= displayName %>",
-      capabilities: [<%= capabilities %>],
+      capabilities: [<%= capabilities %>],<%= credentials %>
     }),
   ],
 })

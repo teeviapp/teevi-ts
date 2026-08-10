@@ -12,13 +12,16 @@ import crypto from "crypto"
 import type { OutputAsset, OutputChunk } from "rollup"
 import { fileURLToPath } from "url"
 
-type TeeviExtensionCapability = "metadata" | "video" | "feed" | "live"
+type TeeviExtensionCapability = "metadata" | "video" | "feed" | "live" | "auth"
 
 type TeeviExtensionInput = {
   id: string
   name: string
   required: boolean
-  group?: "auth" | string
+  /**
+   * Whether the input value is sensitive (e.g., password, API token) and should be masked in the UI.
+   */
+  secret?: boolean
 }
 
 /**
@@ -69,6 +72,11 @@ type TeeviPluginConfig = {
   inputs?: TeeviExtensionInput[]
 
   /**
+   * Extension credentials.
+   */
+  credentials?: TeeviExtensionInput[]
+
+  /**
    * Optional note for the extension.
    * This can be used to provide additional information about the extension.
    */
@@ -94,6 +102,7 @@ type Manifest = {
   capabilities: TeeviExtensionCapability[]
   iconResourceName: string
   inputs: TeeviExtensionInput[]
+  credentials: TeeviExtensionInput[]
   note?: string
   sdkVersion?: string
 }
@@ -107,6 +116,17 @@ function error(message: string): void {
 }
 
 export default function teeviPlugin(config: TeeviPluginConfig): Plugin {
+  // Validate that credentials are provided if auth capability is requested
+  if (
+    config.capabilities.includes("auth") &&
+    (!config.credentials || config.credentials.length === 0)
+  ) {
+    const errMsg =
+      "Validation error: The 'auth' capability is enabled, but 'credentials' are missing or empty in the plugin configuration."
+    error(errMsg)
+    throw new Error(errMsg)
+  }
+
   log("Reading package.json...")
 
   const fileName = `main.js`
@@ -240,6 +260,7 @@ function createManifest(options: {
     homepage: extensionPackage.homepage,
     iconResourceName: config.iconResourceName ?? "icon.png",
     inputs: config.inputs ?? [],
+    credentials: config.credentials ?? [],
     note: config.note,
     sdkVersion: sdkVersion,
   } satisfies Manifest
